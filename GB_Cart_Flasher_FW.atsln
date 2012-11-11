@@ -1,0 +1,17 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "GB_Cart_Flasher_FW", "GB_Cart_Flasher_FW.cproj", "{D131DE1E-1EA8-42BB-A75F-5FE59157BEB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D131DE1E-1EA8-42BB-A75F-5FE59157BEB4}.Release|AVR.ActiveCfg = Release|AVR
+		{D131DE1E-1EA8-42BB-A75F-5FE59157BEB4}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
