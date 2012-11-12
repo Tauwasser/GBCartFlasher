@@ -1588,7 +1588,7 @@ void send_status(void)
 		address = 0x0134u;
 		p = packet.info_ans.cart_name;
 
-		for (i = offsetof(struct packet_t, info_ans.cart_checksum_lo) - offsetof(struct packet_t, info_ans.cart_name); i; i--, address++) {
+		for (i = offsetof(struct packet_t, info_ans.cart_checksum_lo) - offsetof(struct packet_t, info_ans.cart_name) + 1; i; i--, address++) {
 
 			*p++ = read_rom_data(address, 0x00u, 0x00u);
 

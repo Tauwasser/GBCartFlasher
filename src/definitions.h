@@ -356,7 +356,8 @@ struct packet_t {
 			/**
 			 * Package operation.
 			 * Depending on type.
-			 * One of ::rw_operation.
+			 * One of ::rw_operation or 
+			 * ::stat_operation.
 			 */
 			uint8_t operation;
 			/**
