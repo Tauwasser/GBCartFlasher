@@ -32,7 +32,7 @@
  * Enumeration of all supported
  * Memory Bank Controllers.
  */
-enum mbc_types {
+enum mbc_type {
 
 	/**
 	 * Automatic Selection of
@@ -363,7 +363,7 @@ struct packet_t {
 			/**
 			 * Memory Bank Controller.
 			 * MBC to be assumed for this session.
-			 * One of ::mbc_types.
+			 * One of ::mbc_type.
 			 */
 			uint8_t mbc;
 			/**
@@ -413,7 +413,7 @@ struct packet_t {
 			/**
 			 * Memory Bank Controller.
 			 * MBC to be assumed for this session.
-			 * One of ::mbc_types.
+			 * One of ::mbc_type.
 			 */
 			uint8_t mbc;
 			/**
