@@ -1734,6 +1734,7 @@ int main(void)
 				packet_raw_ix = 0x00u;
 				raw_udr_mode = 0x00u;
 				turn_led_off();
+				break;
 
 			}
 
