@@ -491,30 +491,62 @@ void switch_rom_bank(const uint8_t bank_hi, const uint8_t bank_lo)
 
 	PORTB = 0x00u;
 
-	if (MBC5 == cur_mbc || MBCAUTO == cur_mbc) {
-
-		PORTA = 0x30; // address 0x3000
-
-		write_gec(bank_hi);
-		WAIT_LOOP(0x02u, i);
-
-	}
-
 	// FIXME: Won't work for MBC2!!!
 	PORTA = 0x20u;
-
-	write_gec(bank_lo);
-
-	// change memory model for MBC1
-	if (MBC2 > cur_mbc) {
-
+	
+	if (0x00u == bank_hi && 0x00 == bank_lo) {
+		
+		reset_mbc();
+		
+	}	
+		
+	if (  (0x00u == bank_hi && 0x02u == bank_lo)
+	   || (0x00u == bank_hi && 0x22u == bank_lo)
+	   ) {
+		
+		reset_mbc();
+		
+		WAIT_LOOP(0x10u, i);
+		
+		if (0x02u == bank_lo)
+			write_gec(0x00u); // base address
+		else
+			write_gec(0x20u); // base address
+		
 		WAIT_LOOP(0x02u, i);
-
-		PORTA = 0x40u;
-
-		write_gec((bank_lo >> 5));
-
+		
+		PORTA = 0x50u;
+		
+		write_gec(0x00u); // ??
+		
+		WAIT_LOOP(0x02u, i);
+		
+		PORTA = 0x70u;
+		
+		write_gec(0x01u); // address mask?
+		
+		WAIT_LOOP(0x02u, i);
+		
+		PORTA = 0x00u;
+		
+		write_gec(0x00u); // activate mapping
+		
+		WAIT_LOOP(0x10u, i);
+		
+		PORTA = 0x00u;
+		
+		write_gec(0x40u); // activate mapping
+		
+		WAIT_LOOP(0x10u, i);
+		
 	}
+	
+	PORTA = 0x20u;
+	
+	if (0x22u < bank_lo)
+		write_gec(bank_lo - 0x22u);
+	else if  (0x02u < bank_lo && 0x22u > bank_lo)
+		write_gec(bank_lo - 0x02u);
 
 }
 
@@ -558,6 +590,12 @@ const uint8_t read_rom_data(const uint16_t address, const uint8_t bank_hi, const
 			addr_hi |= 0x40u;
 
 		}
+		
+		if (0x00u == bank_hi && 0x02u == bank_lo)
+			addr_hi &= 0x3Fu;
+			
+		if (0x00u == bank_hi && 0x22u == bank_lo)
+			addr_hi &= 0x3Fu;
 
 		PORTA = addr_hi;
 		result = read_gec();
@@ -1206,19 +1244,6 @@ void write_rom_ram(const uint8_t ram_rom)
 	uint8_t* p_rom;
 	uint8_t* p_ram;
 	uint8_t* d;
-
-	reset_mbc();
-
-	if (RAM != ram_rom) {
-
-		set_mbc1_model(MBC1_16_8);
-
-	} else {
-
-		set_mbc1_model(MBC1_4_32);
-		send_sram_enable();
-
-	}
 
 	num_banks = (cur_numbanks_hi << 8) + cur_numbanks_lo;
 
