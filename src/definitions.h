@@ -31,7 +31,7 @@
  */
 #define FW_VER_MAJ "02"
 /**
- * Firmware Mino Version.
+ * Firmware Minor Version.
  */
 #define FW_VER_MIN "10"
 

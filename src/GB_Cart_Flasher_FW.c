@@ -105,7 +105,8 @@ const uint8_t NINTENDO_LOGO[] PROGMEM = {
 };
 
 /**
- * CRC Lookup Table 1.
+ * CRC-16 CCITT Lookup Table 1.
+ * High Order Bits
  */
 const uint16_t LUT1[] PROGMEM = {
 
@@ -114,7 +115,8 @@ const uint16_t LUT1[] PROGMEM = {
 };
 
 /**
- * CRC Lookup Table 0.
+ * CRC-16 CCITT Lookup Table 0.
+ * Low Order Bits
  */
 const uint16_t LUT0[] PROGMEM = {
 
@@ -453,7 +455,7 @@ void set_mbc1_model(const uint8_t model)
 
 /**
  * Switch MBC ROM Bank.
- * Writes bank_lo to 0x2000 and - preceeding that -
+ * Writes bank_lo to 0x2000 and - preceding that -
  * if ::cur_mbc is ::MBC5 or ::MBCAUTO bank_hi to 0x3000.
  * \note MBC2 implementation is broken and will actually
  *       only disable/enable SRAM depending on bank_lo.
@@ -974,7 +976,7 @@ void clear_packet(void)
 }
 
 /**
- * Add nibble to current CRC value.
+ * Add nibble to current CRC-16 CCITT value.
  * \note High bits of nibble byte must not be set!
  * @param nibble Nibble to be added.
  */
@@ -989,7 +991,7 @@ void add_crc(const uint8_t nibble)
 }
 
 /**
- * Compute packet CRC.
+ * Compute packet CRC-16 CCITT.
  * Compute new CRC value for packet.payload in ::crc_hi8 and ::crc_lo8.
  */
 void compute_crc(void)
