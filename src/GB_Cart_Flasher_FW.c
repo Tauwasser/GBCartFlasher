@@ -503,7 +503,8 @@ void switch_rom_bank(const uint8_t bank_hi, const uint8_t bank_lo)
 	// FIXME: Won't work for MBC2!!!
 	PORTA = 0x20u;
 
-	write_gec(bank_lo);
+	// account for different mapping
+	write_gec(bank_lo & 0x0Fu);
 
 	// change memory model for MBC1
 	if (MBC2 > cur_mbc) {
@@ -512,7 +513,8 @@ void switch_rom_bank(const uint8_t bank_hi, const uint8_t bank_lo)
 
 		PORTA = 0x40u;
 
-		write_gec((bank_lo >> 5));
+		// account for different mapping
+		write_gec((bank_lo >> 4));
 
 	}
 
@@ -552,7 +554,7 @@ const uint8_t read_rom_data(const uint16_t address, const uint8_t bank_hi, const
 
 	if ((address >> 8) < 0x40u) {
 		
-		if ((MBC2 > cur_mbc && 0x00u != (bank_lo & 0x1Fu))
+		if ((MBC2 > cur_mbc && 0x00u != (bank_lo & 0x0Fu))
 		 || (MBC2 <= cur_mbc && (0x00u != bank_hi || 0x00u != bank_lo))) {
 
 			addr_hi |= 0x40u;
@@ -1355,7 +1357,7 @@ const uint8_t send_packet(void)
 
 /**
  * Read data from either ROM or RAM.
- * Enter continuous read mode from cartrdige to host PC.
+ * Enter continuous read mode from cartridge to host PC.
  * @param ram_rom Target, must be either ::ROM or ::RAM.
  */
 void read_rom_ram(const uint8_t ram_rom)
