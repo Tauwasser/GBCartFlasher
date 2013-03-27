@@ -529,8 +529,9 @@ const uint8_t read_rom_data(const uint16_t address, const uint8_t bank_hi, const
 	PORTB = address & 0xFFu;
 
 	if ((address >> 8) < 0x40u) {
-
-		if (0x00u != bank_hi || 0x00 != bank_lo) {
+		
+		if ((MBC2 > cur_mbc && 0x00u != (bank_lo & 0x1Fu))
+		 || (MBC2 <= cur_mbc && (0x00u != bank_hi || 0x00u != bank_lo))) {
 
 			addr_hi |= 0x40u;
 
@@ -1362,7 +1363,7 @@ void read_rom_ram(const uint8_t ram_rom)
 
 	if (RAM != ram_rom) {
 
-		set_mbc1_model(MBC1_16_8);
+		set_mbc1_model(MBC1_4_32);
 
 	} else {
 
