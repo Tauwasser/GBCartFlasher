@@ -487,35 +487,15 @@ void set_mbc1_model(const uint8_t model)
 void switch_rom_bank(const uint8_t bank_hi, const uint8_t bank_lo)
 {
 
-	uint8_t i;
-
 	PORTB = 0x00u;
-
-	if (MBC5 == cur_mbc || MBCAUTO == cur_mbc) {
-
-		PORTA = 0x30; // address 0x3000
-
-		write_gec(bank_hi);
-		WAIT_LOOP(0x02u, i);
-
-	}
 
 	// FIXME: Won't work for MBC2!!!
 	PORTA = 0x20u;
-
-	write_gec(bank_lo);
-
-	// change memory model for MBC1
-	if (MBC2 > cur_mbc) {
-
-		WAIT_LOOP(0x02u, i);
-
-		PORTA = 0x40u;
-
-		write_gec((bank_lo >> 5));
-
-	}
-
+	
+	reset_mbc();
+	
+	write_gec(bank_lo >> 1);
+	
 }
 
 /**
@@ -548,25 +528,13 @@ const uint8_t read_rom_data(const uint16_t address, const uint8_t bank_hi, const
 	uint8_t result;
 	uint8_t addr_hi = address >> 8;
 
+	if (addr_hi >= 0x40u)
+		return 0xFFu;
+
 	PORTB = address & 0xFFu;
 
-	if ((address >> 8) < 0x40u) {
-		
-		if ((MBC2 > cur_mbc && 0x00u != (bank_lo & 0x1Fu))
-		 || (MBC2 <= cur_mbc && (0x00u != bank_hi || 0x00u != bank_lo))) {
-
-			addr_hi |= 0x40u;
-
-		}
-
-		PORTA = addr_hi;
-		result = read_gec();
-
-	} else {
-
-		result = 0xFFu;
-
-	}
+	PORTA = (addr_hi | (bank_lo << 6)) & 0x7Fu;
+	result = read_gec();
 
 	return result;
 
@@ -1372,20 +1340,7 @@ void read_rom_ram(const uint8_t ram_rom)
 	volatile uint8_t* p;
 	volatile uint8_t* p_rom;
 	volatile uint8_t* p_ram;
-
-	reset_mbc();
-
-	if (RAM != ram_rom) {
-
-		set_mbc1_model(MBC1_4_32);
-
-	} else {
-
-		set_mbc1_model(MBC1_4_32);
-		send_sram_enable();
-
-	}
-
+	
 	num_banks = (cur_numbanks_hi << 8) + cur_numbanks_lo;
 
 	if (num_banks == 0xFFFFu)
@@ -1627,15 +1582,9 @@ void send_status(void)
 
 		WAIT_LOOP(0x04u, i);
 
-		enter_product_id_mode();
-
-		WAIT_LOOP(220u, i);
-
 		packet.info_ans.flash_manufacturer         = read_rom_data(0x0000u, 0x00u, 0x00u);
 		packet.info_ans.flash_device_id            = read_rom_data(0x0001u, 0x00u, 0x00u);
 		packet.info_ans.flash_sector_group_protect = read_rom_data(0x0002u, 0x00u, 0x00u);
-
-		exit_product_id_mode();
 
 	}
 
