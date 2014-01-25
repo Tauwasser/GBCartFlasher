@@ -211,6 +211,21 @@ ISR(USART_RX_vect)
 
 }
 
+static volatile uint8_t *out_ptr;
+
+ISR(USART_UDRE_vect)
+{
+	
+	if (out_ptr != (packet.raw + PACKETSIZE)) {
+	
+		UDR = *out_ptr++;
+		return;
+		
+	}
+	
+	UCSRB &= ~(1u << UDRIE);
+}
+
 /**
  * USART Write Routine.
  * @param b Byte to be written to USART.
@@ -222,6 +237,13 @@ void write_usart(const uint8_t b)
 	while (!(UCSRA & (1u << UDRE)));
 	UDR = b;
 
+}
+
+void write_frame(void) {
+	
+	out_ptr = packet.raw;
+	UCSRB |= (1u << UDRIE);
+	
 }
 
 /**
@@ -1290,22 +1312,14 @@ void write_rom_ram(const uint8_t ram_rom)
 const uint8_t send_packet(void)
 {
 
-	uint8_t i;
 	uint8_t tries;
-	volatile uint8_t* p;
 
 	create_crc();
 	raw_udr_received = false;
 
 	for (tries = 0x00; tries < 0x09; tries++, raw_udr_received = false) {
 
-		p = packet.raw;
-
-		for (i = PACKETSIZE; i; i--) {
-
-			write_usart(*p++);
-
-		}
+		write_frame();
 
 		start_timer1();
 
@@ -1630,13 +1644,7 @@ void send_status(void)
 
 	create_crc();
 
-	p = packet.raw;
-
-	for (i = PACKETSIZE; i; i--) {
-
-		write_usart(*p++);
-
-	}
+	write_frame();
 
 }
 
@@ -1690,6 +1698,8 @@ int main(void)
 	OCR1AL = 0xAAu;
 
 	ACSR = (1u << ACD);
+	UBRRL = 0x00; // force 750000 baud anyway
+	UCSRA = (1u << U2X);
 	UCSRB = (1u << RXCIE | 1u << RXEN | 1u << TXEN);
 	sei();
 
