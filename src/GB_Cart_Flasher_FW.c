@@ -488,33 +488,54 @@ void switch_rom_bank(const uint8_t bank_hi, const uint8_t bank_lo)
 {
 
 	uint8_t i;
+	uint8_t j;
+	
+	PORTD &= ~(1u << PD5); // assert /CS
 
+	PORTA = 0xA0u;
+
+	do {
+		
+		PORTB = 0x01u;
+		
+		write_gec(0x0Au);
+		
+		PORTB = 0x00u;
+		
+		j = read_gec() & 0x03u;
+		
+	} while (j != 0x01u);
+	
+	WAIT_LOOP(0x02u, i);
+	
+	PORTB = 0x01u;
+	
+	write_gec(0x00u);
+	
+	WAIT_LOOP(0x02u, i);
+	
 	PORTB = 0x00u;
-
-	if (MBC5 == cur_mbc || MBCAUTO == cur_mbc) {
-
-		PORTA = 0x30; // address 0x3000
-
-		write_gec(bank_hi);
-		WAIT_LOOP(0x02u, i);
-
-	}
-
-	// FIXME: Won't work for MBC2!!!
-	PORTA = 0x20u;
-
-	write_gec(bank_lo);
-
+	
+	write_gec(bank_lo & 0x0Fu);
+	
 	// change memory model for MBC1
 	if (MBC2 > cur_mbc) {
 
 		WAIT_LOOP(0x02u, i);
+		
+		PORTB = 0x01u;
+		
+		write_gec(0x01u);
 
-		PORTA = 0x40u;
+		WAIT_LOOP(0x02u, i);
+		
+		PORTB = 0x00u;
 
-		write_gec((bank_lo >> 5));
+		write_gec((bank_lo >> 4));
 
 	}
+	
+	PORTD |= (1u << PD5);  // deassert /CS
 
 }
 
@@ -1375,17 +1396,6 @@ void read_rom_ram(const uint8_t ram_rom)
 
 	reset_mbc();
 
-	if (RAM != ram_rom) {
-
-		set_mbc1_model(MBC1_4_32);
-
-	} else {
-
-		set_mbc1_model(MBC1_4_32);
-		send_sram_enable();
-
-	}
-
 	num_banks = (cur_numbanks_hi << 8) + cur_numbanks_lo;
 
 	if (num_banks == 0xFFFFu)
@@ -1626,16 +1636,6 @@ void send_status(void)
 		}
 
 		WAIT_LOOP(0x04u, i);
-
-		enter_product_id_mode();
-
-		WAIT_LOOP(220u, i);
-
-		packet.info_ans.flash_manufacturer         = read_rom_data(0x0000u, 0x00u, 0x00u);
-		packet.info_ans.flash_device_id            = read_rom_data(0x0001u, 0x00u, 0x00u);
-		packet.info_ans.flash_sector_group_protect = read_rom_data(0x0002u, 0x00u, 0x00u);
-
-		exit_product_id_mode();
 
 	}
 
