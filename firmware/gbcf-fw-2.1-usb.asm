@@ -59,8 +59,8 @@
 ;;  00EA - CRC lo8
 ;; }
 ;; 00EB - session MBC
-;; 00EC - session Flash Algorithm
-;; 00ED - session Flash Type
+;; 00EC - session Flash Type
+;; 00ED - session Flash Algorithm
 ;; 00EE - session NumBanks hi8
 ;; 00EF - session NumBanks lo8
 ;; 00F0 - receive frame (00)/ receive raw byte (<> 00)
@@ -731,7 +731,7 @@ ret
 
 ; Referenced from offset 0x4f6 by rcall
 ; Referenced from offset 0x5a8 by rcall
- ;; Wait Program Flash
+ ;; Verify Program Flash
  ;; 
  ;; r22		Data Written
  ;; r24		Option
@@ -751,7 +751,7 @@ ret
  ;;
  ;; r18, r24, r25 overwritten
  
-Wait_Program_Flash:
+Verify_Program_Flash:
 push    r28
 mov     r18, r24
 mov     r28, r22
@@ -792,7 +792,7 @@ ldi     r28, 0x00		;; Wait 0x33 times
 
 ; Referenced from offset 0x376 by brcs
 Label41:
-ldi     r18, 0x09		;; Wait 0x0A times
+ldi     r18, 0x09		;; Wait 0x09 times
 
 ; Referenced from offset 0x370 by rjmp
 Label42:
@@ -925,7 +925,7 @@ ldi     r28, 0x00		;; Wait 0x65 times
 
 ; Referenced from offset 0x402 by brcs
 Label56:
-ldi     r18, 0x09		;; Wait 0x0A times
+ldi     r18, 0x09		;; Wait 0x09 times
 
 ; Referenced from offset 0x3fc by rjmp
 Label57:
@@ -1106,7 +1106,7 @@ out     PORTA, r12
 out     PORTB, r9
 mov     r22, r8
 ldi     r24, 0x00
-rcall   Wait_Program_Flash
+rcall   Verify_Program_Flash
 pop     r29
 pop     r28
 pop     r17
@@ -1206,7 +1206,7 @@ sbrs    r11, 7
 rjmp    Label66			;; r11 >= 0x00
 ser     r22
 ldi     r24, 0x01       ; 1
-rcall   Wait_Program_Flash
+rcall   Verify_Program_Flash
 pop     r29
 pop     r28
 pop     r17
