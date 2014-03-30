@@ -15,13 +15,12 @@
 
 ;; RAM Map
 ;; 0060 - calculated crc hi8
-;; 0061 - packet byte counter/index
+;; 0061 - frame byte counter/index
 ;; 0062 - raw byte receive register
-;; 
-;; 0063-00A2 - temporary copy of payload data (00A9-00E8)
-;; 
-;; Request packet:
-;; struct packet {
+;;
+;; 0063-00A2 - temporary copy of payload data (00A9 - 00E8)
+;;
+;; struct frame {
 ;;  00A3 - command
 ;;          0xAA - ACK
 ;;          0xF0 - NACK
@@ -64,7 +63,7 @@
 ;; 00ED - session Flash Type
 ;; 00EE - session NumBanks hi8
 ;; 00EF - session NumBanks lo8
-;; 00F0 - receive packet (00)/ receive raw byte (<> 00)
+;; 00F0 - receive frame (00)/ receive raw byte (<> 00)
 ;; 00F1 - raw byte receive status (00 - not ~, <> 00 - received)
 ;; 00F2 - calculated crc lo8
 
@@ -1407,7 +1406,7 @@ ret
  ;; Clear 0x47 bytes at 0x00A4
  ;; This leaves the command byte at 0x00A3.
  
-Clear_Packet:
+Clear_Frame:
 ldi     r30, 0xa4
 ldi     r31, 0x00		;; Z = 0x00A4
 ldi     r24, 0x46		;; byte count 0x47
@@ -1476,7 +1475,7 @@ ret
 
 ; Referenced from offset 0x7cc by rcall
 ; Referenced from offset 0x7a8 by rcall
- ;; Compute packet CRC for 0x46 bytes (i.e. all bytes)
+ ;; Compute frame CRC for 0x46 bytes (i.e. all bytes)
  
 Compute_CRC:
 push    r17
@@ -1537,7 +1536,7 @@ ret
 
 ; Referenced from offset 0x9e0 by rcall
 ; Referenced from offset 0xd34 by rcall
- ;; Create CRC for sending packet back.
+ ;; Create CRC for sending frame back.
  
 Create_CRC:
 rcall   Compute_CRC
@@ -1555,7 +1554,7 @@ ret
  ;; r18		00: RAM
  ;; 		01: ROM
  
-Wait_Packet:
+Wait_Frame:
 push    r13
 push    r14
 push    r15
@@ -1574,7 +1573,7 @@ Label73:
 rcall   Start_Timer1
 
 ; Referenced from offset 0x806 by rjmp
- ;; Wait for complete packet
+ ;; Wait for complete frame
 
 Label74:
 lds     r24, 0x0061
@@ -1587,7 +1586,7 @@ rcall   Stop_Timer1
 rjmp    Label84
 
 ; Referenced from offset 0x800 by brcc
- ;; Packet complete
+ ;; Frame complete
  
 Label75:
 rcall   Stop_Timer1
@@ -1808,7 +1807,7 @@ mov     r18, r16		;; ROM/RAM
 mov     r20, r3			;; RAM Bank/ ROM Bank lo8
 mov     r22, r4			;; ROM Bank hi8
 mov     r24, r10		;; Packet-per-Bank counter
-rcall   Wait_Packet
+rcall   Wait_Frame
 tst     r24
 brne    Label98			;; Exit
 ldi     r30, 0xa3
@@ -1920,9 +1919,9 @@ ret
 
 
 ; Referenced from offset 0xb34 by rcall
- ;; Create Packet
+ ;; Create Frame
 
-Send_Packet:
+Send_Frame:
 push    r15
 push    r16
 push    r17
@@ -1932,7 +1931,7 @@ rcall   Create_CRC
 sts     0x00f1, r15		;; Enable Receive Flag
 
 ; Referenced from offset 0xa3a by rjmp
- ;; Send Packet
+ ;; Send Frame
 Label99:
 ldi     r16, 0xa3
 ldi     r17, 0x00		;; r17 r16 = 0x00A3
@@ -1944,7 +1943,7 @@ Label100:
 movw    r30, r16
 ld      r24, Z+
 movw    r16, r30
-rcall   Write_USART		;; Write Packet byte
+rcall   Write_USART		;; Write Frame byte
 subi    r28, 0x01		;; r28--
 sbrs    r28, 7
 rjmp    Label100		;; r28 >= 0x00
@@ -1954,7 +1953,7 @@ rcall   Start_Timer1
 Label101:
 lds     r24, 0x00f1     ;; Check Receive Flag
 tst     r24
-brne    Label102		;; Packet was received at other end
+brne    Label102		;; Frame was received at other end
 in      r0, TIFR
 sbrs    r0, 6
 rjmp    Label101		;; Not Timer 1 Output A Match
@@ -1962,7 +1961,7 @@ rcall   Stop_Timer1
 rjmp    Label104
 
 ; Referenced from offset 0xa02 by brne
- ;; Other end received packet.
+ ;; Other end received frame.
 
 Label102:
 rcall   Stop_Timer1
@@ -2121,7 +2120,7 @@ movw    r8, r10			;; GB Address
 
 ; Referenced from offset 0xb4e by brcc
 Label115:
-rcall   Clear_Packet
+rcall   Clear_Frame
 cp      r28, r14
 cpc     r29, r15
 brne    Label116		;; GB Bank != NumBanks
@@ -2187,7 +2186,7 @@ subi    r16, 0xff
 sbci    r17, 0xff		;; Packet1 Address++
 sbrs    r7, 7
 rjmp    Label118		;; r7 >= 0x00
-rcall   Send_Packet
+rcall   Send_Frame
 tst     r24
 breq    Label121		;; OK
  
@@ -2426,7 +2425,7 @@ sts     0x00ec, r24		;; (0x00EC) <= 00/01 		(Flash Algorithm)
 
 ; Referenced from offset 0xc74 by breq
 Label137:
-rcall   Clear_Packet
+rcall   Clear_Frame
 tst     r17
 brne    Label138
 rjmp    Label144
