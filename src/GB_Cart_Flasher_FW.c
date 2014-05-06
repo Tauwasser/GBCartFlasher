@@ -408,6 +408,20 @@ void reset_mbc(void)
 
 	WAIT_LOOP(1500u, i);
 
+	// Unlock Sachen Mapper
+	i = 0x30u;
+	while (i-- > 0) {
+
+		PORTA = 0x80u;
+		write_gec(0xFFu);
+		PORTA = 0x00u;
+		read_gec();
+
+	}
+
+	PORTA = 0x80u;
+	write_gec(0xFFu);
+
 }
 
 /**
