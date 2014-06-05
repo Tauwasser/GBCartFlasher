@@ -505,30 +505,12 @@ void switch_rom_bank(const uint8_t bank_hi, const uint8_t bank_lo)
 
 	PORTB = 0x00u;
 
-	if (MBC5 == cur_mbc || MBCAUTO == cur_mbc) {
-
-		PORTA = 0x30; // address 0x3000
-
-		write_gec(bank_hi);
-		WAIT_LOOP(0x02u, i);
-
-	}
-
-	// FIXME: Won't work for MBC2!!!
 	PORTA = 0x20u;
-
-	write_gec(bank_lo);
-
-	// change memory model for MBC1
-	if (MBC2 > cur_mbc) {
-
-		WAIT_LOOP(0x02u, i);
-
-		PORTA = 0x40u;
-
-		write_gec((bank_lo >> 5));
-
-	}
+	
+	if (bank_lo)
+		write_gec(bank_lo);
+	else
+		write_gec(bank_lo | 0x80u);
 
 }
 
@@ -566,12 +548,8 @@ const uint8_t read_rom_data(const uint16_t address, const uint8_t bank_hi, const
 
 	if ((address >> 8) < 0x40u) {
 		
-		if ((MBC2 > cur_mbc && 0x00u != (bank_lo & 0x1Fu))
-		 || (MBC2 <= cur_mbc && (0x00u != bank_hi || 0x00u != bank_lo))) {
-
-			addr_hi |= 0x40u;
-
-		}
+		// dump all RB from 0x4000 range
+		addr_hi |= 0x40u;
 
 		PORTA = addr_hi;
 		result = read_gec();
