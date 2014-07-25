@@ -388,6 +388,23 @@ void write_flash_ain(const uint8_t d)
 
 }
 
+void unlock_sachen(void) {
+	
+	uint8_t i = 0x31u;
+	uint8_t j;
+	
+	// Unlock Sachen Mapper
+	while (i-- > 0) {
+
+		PORTA = 0x80;
+		WAIT_LOOP(0x02u, j);
+		PORTA = 0x00u;
+		WAIT_LOOP(0x02u, j);
+
+	}
+
+}
+
 /**
  * Reset Memory Bank Controller (MBC).
  */
@@ -409,19 +426,8 @@ void reset_mbc(void)
 	WAIT_LOOP(1500u, i);
 
 	// Unlock Sachen Mapper
-	i = 0x30u;
-	while (i-- > 0) {
-
-		PORTA = 0x80u;
-		write_gec(0xFFu);
-		PORTA = 0x00u;
-		read_gec();
-
-	}
-
-	PORTA = 0x80u;
-	write_gec(0xFFu);
-
+	unlock_sachen();
+	
 }
 
 /**
