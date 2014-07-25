@@ -405,6 +405,27 @@ void unlock_sachen(void) {
 
 }
 
+void unlock_sachen_cgb(void) {
+	
+	uint8_t i = 0x30u;
+	uint8_t j;
+	
+	PORTD &= ~(1u << PD5); // assert /CS
+	WAIT_LOOP(0x02u, j);
+	PORTD |= (1u << PD5); // deassert /CS
+	
+	// Unlock Sachen Mapper CGB
+	while (i-- > 0) {
+
+		PORTA = 0x00;
+		WAIT_LOOP(0x02u, j);
+		PORTA = 0x80u;
+		WAIT_LOOP(0x02u, j);
+
+	}
+	
+}
+
 /**
  * Reset Memory Bank Controller (MBC).
  */
@@ -426,7 +447,7 @@ void reset_mbc(void)
 	WAIT_LOOP(1500u, i);
 
 	// Unlock Sachen Mapper
-	unlock_sachen();
+	unlock_sachen_cgb();
 	
 }
 
