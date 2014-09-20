@@ -407,7 +407,7 @@ void unlock_sachen(void) {
 
 void unlock_sachen_cgb(void) {
 	
-	uint8_t i = 0x30u;
+	uint8_t i = 0x31u;
 	uint8_t j;
 	
 	PORTD &= ~(1u << PD5); // assert /CS
