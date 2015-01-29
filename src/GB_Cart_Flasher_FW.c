@@ -1677,6 +1677,7 @@ int main(void)
 	// PU on #RESET
 	PORTD = 0xFFu;
 	DDRD = 0xFF ^ ((1u << DDD6) | (1 << DDD0));
+	PORTD &= ~(1u << PD7); // deassert /AIN
 
 	PORTE = 0x05u;
 	DDRE = (1u << DDE1);
