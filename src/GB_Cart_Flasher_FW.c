@@ -400,16 +400,19 @@ void reset_mbc(void)
 
 	WAIT_LOOP(15000u, i);
 
+	// remove PU and drive '0'
 	PORTD &= ~(1u << PD6); // assert /RST
+	DDRD |= (1u << DDD6);
 
 	WAIT_LOOP(1500u, i);
 
+	// float and activate PU
+	DDRD &= ~(1u << DDD6);
 	PORTD |= (1u << PD6); // deassert /RST
 
 	WAIT_LOOP(1500u, i);
 
 }
-
 /**
  * Reset address busses.
  * Reset GEC address bus to 0x0000u
@@ -1671,8 +1674,9 @@ int main(void)
 	DDRC = 0x00u;
 	PORTC = 0xFFu;
 
+	// PU on #RESET
 	PORTD = 0xFFu;
-	DDRD = 0xFF ^ (1 << DDD0);
+	DDRD = 0xFF ^ ((1u << DDD6) | (1 << DDD0));
 
 	PORTE = 0x05u;
 	DDRE = (1u << DDE1);
