@@ -431,11 +431,16 @@ struct packet_t {
 			 */
 			uint8_t mbc;
 			/**
-			 * Number of SRAM banks or flash algorithm.
+			 * Number of SRAM banks or Flash Algorithm.
 			 * Depending on #operation.
 			 * Latter is one of ::flash_algorithm.
 			 */
 			uint8_t num_banks_or_algorithm;
+			/**
+			 * Flash Wait Mode.
+			 * Wait mode to be used for this session.
+			 * One of ::write_status_detection.
+			 */
 			uint8_t wait_mode;
 
 		} erase;

@@ -152,13 +152,13 @@ static volatile struct packet_t packet;
  */
 static uint8_t cur_mbc;
 /**
- * Flash Chip Wait Mode.
- */
-static enum write_status_detection cur_wait_mode;
-/**
  * Flash Chip Algorithm.
  */
-static uint8_t cur_flash_algorithm;
+static enum flash_algorithm cur_flash_algorithm;
+/**
+ * Flash Chip Wait Mode.
+ */
+static uint8_t cur_wait_mode;
 /**
  * High byte of number of banks
  * for current operation.
@@ -765,7 +765,7 @@ void program_flash(const uint8_t data, const uint16_t address, const uint8_t ban
 	// Bring flash chip into write mode
 	for (ix = 0x0000u, i = 0x09u; i; ix += 0x03u, i -= 0x03u) {
 
-		offset = cur_wait_mode * 0x09u + ix;
+		offset = cur_flash_algorithm * 0x09u + ix;
 
 		PORTA = pgm_read_byte(&BYTE_PROGRAM[offset + 0]);
 		PORTB = pgm_read_byte(&BYTE_PROGRAM[offset + 1]);
@@ -839,7 +839,7 @@ void erase_flash(void)
 		// Erase data using AIN
 		//////////////////////////////////////////////////////////////////////////
 
-		offset = cur_wait_mode * 0x12u + ix;
+		offset = cur_flash_algorithm * 0x12u + ix;
 
 		PORTA = pgm_read_byte(&CHIP_ERASE[offset + 0]);
 		PORTB = pgm_read_byte(&CHIP_ERASE[offset + 1]);
@@ -888,7 +888,7 @@ void enter_product_id_mode(void)
 		// Enter mode using AIN
 		//////////////////////////////////////////////////////////////////////////
 
-		offset = cur_wait_mode * 0x09u + ix;
+		offset = cur_flash_algorithm * 0x09u + ix;
 
 		PORTA = pgm_read_byte(&PRODUCT_ID_ENTRY[offset + 0]);
 		PORTB = pgm_read_byte(&PRODUCT_ID_ENTRY[offset + 1]);
@@ -932,7 +932,7 @@ void exit_product_id_mode(void)
 		// Enter mode using AIN
 		//////////////////////////////////////////////////////////////////////////
 
-		offset = cur_wait_mode * 0x09u + ix;
+		offset = cur_flash_algorithm * 0x09u + ix;
 
 		PORTA = pgm_read_byte(&PRODUCT_ID_EXIT[offset + 0]);
 		PORTB = pgm_read_byte(&PRODUCT_ID_EXIT[offset + 1]);
@@ -1472,7 +1472,7 @@ void manipulate_data(void)
 {
 
 	cur_mbc             = packet.request.mbc;
-	cur_flash_algorithm = packet.request.algorithm;
+	cur_flash_algorithm = packet.request.algorithm & (ALG12 - ALG16 + 1 - 1);
 	cur_wait_mode       = packet.request.wait_mode;
 	cur_numbanks_hi     = packet.request.num_banks_hi;
 	cur_numbanks_lo     = packet.request.num_banks_lo;
@@ -1549,7 +1549,7 @@ void erase_data(void)
 	} else {
 
 		// EFLA
-		cur_flash_algorithm = packet.erase.num_banks_or_algorithm;
+		cur_flash_algorithm = packet.erase.num_banks_or_algorithm & (ALG12 - ALG16 + 1 - 1);
 		cur_wait_mode       = packet.erase.wait_mode;
 		erase_flash();
 
@@ -1578,7 +1578,7 @@ void send_status(void)
 
 		read_header         = true;
 		cur_mbc             = packet.request.mbc;
-		cur_flash_algorithm = packet.request.algorithm;
+		cur_flash_algorithm = packet.request.algorithm & (ALG12 - ALG16 + 1 - 1);
 
 	}
 
