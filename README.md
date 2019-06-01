@@ -31,7 +31,7 @@ The original files came without an explicit license other than the statement "[T
 and any commercial use is prohibited". I, Tauwasser, believe the BY-NC-SA 4.0 International license 
 to best match the spirit and intent of the original authors, Kraku & Chroost.
 
-This firmware is licensed under the Attribution-NonCommercial-ShareAlike 4.0 International.
+This C firmware reimplementation is licensed under the Attribution-NonCommercial-ShareAlike 4.0 International.
 
 ```
 Copyright (C) 2005–2007 Kraku & Chroost (gbflasher@interia.pl)
