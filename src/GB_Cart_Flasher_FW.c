@@ -165,12 +165,12 @@ static uint8_t cur_wait_mode;
  * High byte of number of banks
  * for current operation.
  */
-static uint8_t cur_numbanks_hi;
+static uint8_t cur_numbanks_lo;
 /**
  * Low byte of number of banks
  * for current operation.
  */
-static uint8_t cur_numbanks_lo;
+static uint8_t cur_numbanks_hi;
 /**
  * USART raw UDR mode switch.
  * 0x00 - Packet mode.
