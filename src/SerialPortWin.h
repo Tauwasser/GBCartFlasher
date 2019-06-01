@@ -4,7 +4,7 @@
 *****************************************************************************/
 #ifndef _SERIALPORTWIN_H_
 #define _SERIALPORTWIN_H_
-#include <windows.h>
+//#include <windows.h>
 #include "AbstractPort.h"
 #include <time.h>
 

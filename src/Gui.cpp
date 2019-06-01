@@ -13,28 +13,28 @@
 
 
 
-#ifdef Q_WS_X11
+/*#ifdef Q_WS_MAC
 #include "SerialPort.h"
 #include "USBPort.h"
-#endif
+#endif*/
 
-#ifdef Q_WS_WIN
+#ifdef Q_WS_MAC
 #include "USBPortWin.h"
-#include "SerialPortWin.h"
+//#include "SerialPortWin.h"
 #endif
 
 #include "const.h"
 #include "flasher.xpm"
-#include "icon.xpm"
+#include "gbcf.xpm"
 
 int
-  Gui::port_type = SERIAL;
+  Gui::port_type = USB;
 
 Gui::Gui (QWidget * parent):QWidget (parent)
 {
   QThread::currentThread ()->setPriority (QThread::NormalPriority);
   path = ".";			//current startup dir
-  this->setWindowIcon (QIcon (QPixmap (icon)));
+  this->setWindowIcon (QIcon (QPixmap (gbcf_xpm)));
   this->setWindowTitle (tr ("GB Cart Flasher version ") + VER);
   grid = new QGridLayout (this);
   left = new QVBoxLayout ();
@@ -52,7 +52,7 @@ Gui::Gui (QWidget * parent):QWidget (parent)
   grid->addLayout (left, 0, 0);
   console = new Console (this);
 
-  QPixmap Logo (gameboy);
+  QPixmap Logo (flasher_xpm);
 
   image->setPixmap (Logo);
 
@@ -128,9 +128,10 @@ Gui::Gui (QWidget * parent):QWidget (parent)
 
   connect (settings, SIGNAL (refresh_ram_buttons (void)), this,
 	   SLOT (setRamButtons (void)));
+	//connect (this, SIGNAL(abouttoQuit()), this, SLOT(almostQuitting()));
   setProgress (0, 1);
   console->print (tr ("GB Cart Flasher version ") + VER + tr (" started."));
-#ifdef Q_WS_WIN
+#ifdef Q_WS_MAC
 /* device detection is avilable only on Windows */
   if (Settings::commanual == FALSE)
     {
@@ -142,22 +143,23 @@ Gui::Gui (QWidget * parent):QWidget (parent)
 AbstractPort *
 Gui::create_port (void)
 {
+	//port_type = USB;
   switch (port_type)
     {
     case USB:
-#ifdef Q_WS_WIN
+#ifdef Q_WS_MAC
       return new USBPortWin;
 #endif
-#ifdef Q_WS_X11
+/*#ifdef Q_WS_MAC
       return new USBPort;
-#endif
-    case SERIAL:
+#endif*/
+    /*case SERIAL:
 #ifdef Q_WS_WIN
       return new SerialPortWin;
 #endif
-#ifdef Q_WS_X11
+#ifdef Q_WS_MAC
       return new SerialPort;
-#endif
+#endif*/
       break;
     }
   return NULL;
@@ -174,22 +176,24 @@ Gui::startup_info (void)
     {
       port_type = USB;
       AbstractPort *port = create_port ();
-      if (Logic::read_status (port, "USB", NREAD_ID, 0x00, 0x00, &status) ==
+			
+			port->open_port(settings->getCom(0).toAscii());
+			port->close_port();
+			
+			if (Logic::read_status (port, settings->getCom(0).toAscii(), NREAD_ID, 0x00, 0x00, &status) ==
 	  TRUE)
 	{
 	  QString tmp;
 	  console->print (tr ("Device connected to: USB"));
-	  settings->setCom (4);	//4 is index of usb in combobox
+	  settings->setCom (0);	//0 is index of usb in combobox
 	  tmp =
 	    tmp.sprintf (" %d%d.%d%d", status.ver_11, status.ver_12,
 			 status.ver_21, status.ver_22);
 	  console->print (tr ("Device firmware version:") + tmp);
-	  console->line ();
+	  //console->line ();
 	  return;
 	}
-
-      port_type = SERIAL;
-      port = create_port ();
+      
       for (int i = 0; i < PORTS_COUNT; i++)
 	{
 	  if (Logic::
@@ -203,7 +207,7 @@ Gui::startup_info (void)
       if (which_port == -1)
 	{
 	  console->print (tr ("Device not found!"));
-	  console->print (tr ("Check COM port connection."));
+	  console->print (tr ("Check USB port connection."));
 	}
       else
 	{
@@ -234,11 +238,11 @@ Gui::show_info ()
   if (return_code == TRUE)	/* no error */
     {
 
-      console->print (tr ("--Device information--"));
+      /*console->print (tr ("--Device information--"));
       tmp =
 	tmp.sprintf (" %d%d.%d%d", status.ver_11, status.ver_12,
 		     status.ver_21, status.ver_22);
-      console->print (tr ("Device firmware version:") + tmp);
+      console->print (tr ("Device firmware version:") + tmp);*/
       console->print ("\n" + tr ("--Cartridge information--"));
       tmp = tmp.sprintf (" 0x%x", status.manufacturer_id);
       console->print (tr ("FLASH memory manufacturer ID:") + tmp);
@@ -437,7 +441,7 @@ Gui::write_ram (void)
     {
       long bytes_count;
       short kilobytes_count;
-      thread_WRAM->port = create_port ();;
+      thread_WRAM->port = create_port ();
       if (thread_WRAM->port->open_port (settings->getCom().toAscii()) == FALSE)
 	{
 	  print_error (PORT_ERROR);
@@ -617,7 +621,7 @@ Gui::print_error (int err)
       break;
 
     case PORT_ERROR:
-      console->print (tr (">Error opening COM port."));
+      console->print (tr (">Error opening USB port."));
       break;
 
     case WRONG_SIZE:
@@ -644,3 +648,15 @@ Gui::about ()
   About about (this);
   about.exec ();
 }
+
+/*void Gui::almostQuitting()
+{
+	printf("closing app...\n");
+	/*if (this->port->close_port())
+		return;
+	else {
+		printf("USB won't close");
+		return;
+	}
+
+}*/

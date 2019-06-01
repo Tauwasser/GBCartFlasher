@@ -79,7 +79,7 @@ Q_OBJECT public:
 				int page_number);
     Logic (QObject * parent = 0);
 /* query device for status of itself and cart, fills status_t struct */
-  static int read_status (AbstractPort * port, const char *name_portu, char id,
+  static int read_status (AbstractPort * port, const char *port_name, char id,
 			  char mbc, char alg, status_t * flasher_stat);
 /* sends start packet generateg from given configuration */
   static bool send_start_packet (AbstractPort * port, config_t cfg);

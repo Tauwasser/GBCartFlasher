@@ -13,21 +13,25 @@ extern "C"{
 /*
  * Headers for hardware support under Windows
  */
-#include <windows.h>
+//#include <windows.h>
 }
 
 USBPortWin::USBPortWin()
 	:AbstractPort()
 	
 {
-	
 }
 
 
 bool USBPortWin::open_port (QString port_name)
 {
-	if(FT_Open(0,&ftHandle) != FT_OK)
+	FT_STATUS ftStatus;
+	ftStatus = FT_OpenEx((void*)"USB <-> Serial",FT_OPEN_BY_DESCRIPTION,&ftHandle);//FT_Open(0,&ftHandle);
+	if (ftStatus != FT_OK)
+	{
+		printf("couldn't open port - error code: %d\n", (int)ftStatus);
 		return FALSE;
+	}
 /* choose speed */
     if(Settings::speed == STANDARD){
     	if(FT_SetBaudRate(ftHandle,185000) != FT_OK)
@@ -46,8 +50,8 @@ bool USBPortWin::open_port (QString port_name)
 		return FALSE;
 	if(FT_SetDataCharacteristics(ftHandle,FT_BITS_8,FT_STOP_BITS_1,FT_PARITY_NONE) != FT_OK)
 		return FALSE;
-	if(FT_SetDataCharacteristics(ftHandle,FT_BITS_8,FT_STOP_BITS_1,FT_PARITY_NONE) != FT_OK)
-		return FALSE;
+	//if(FT_SetDataCharacteristics(ftHandle,FT_BITS_8,FT_STOP_BITS_1,FT_PARITY_NONE) != FT_OK)
+		//return FALSE;
 	if(FT_SetTimeouts(ftHandle,5000,0) != FT_OK)
 		return FALSE;
 	return TRUE;/* all ok */
@@ -57,8 +61,12 @@ bool USBPortWin::open_port (QString port_name)
 
 bool USBPortWin::close_port ()
 {
-	    FT_Close(ftHandle);
-        return TRUE;
+	FT_STATUS ftStatus;
+	ftStatus = FT_Close(ftHandle);
+	if (ftStatus != FT_OK)
+		printf("port not closing...!! error code: %d\n", (int)ftStatus);
+	ftHandle = NULL;
+	return TRUE;
 }
 
 int USBPortWin::send_packet (unsigned char packet[PACKETSIZE])

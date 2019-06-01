@@ -98,7 +98,14 @@ Logic::read_status (AbstractPort * port, const char *port_name, char id, char mb
 {
   assert (port != NULL);
   if (port->open_port (port_name) == FALSE)
+	{
+		port->close_port();
     return PORT_ERROR;
+	}
+	
+	//Trash on first open.. so Close and open again..
+	//port->close_port();
+	//port->open_port(port_name);
 
   unsigned short crc16;
   unsigned char packet[PACKETSIZE];
@@ -119,6 +126,7 @@ Logic::read_status (AbstractPort * port, const char *port_name, char id, char mb
     }
   else
     {
+			//port->receive_packet (packet); //trash packet
       if (port->receive_packet (packet) == DATA)
 	{
 	  int i, producers_count = sizeof producers / sizeof producers[0];

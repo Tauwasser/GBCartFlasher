@@ -40,8 +40,8 @@ Settings::Settings (QWidget * parent):QGroupBox (tr ("Settings"), parent)
   com_combo = new QComboBox (this);
   combo_boxes->addWidget (com_combo);
 
-#ifdef Q_WS_X11
-  com_combo->insertItem (0, "/dev/ttyS0");
+#ifdef Q_WS_MAC
+  /*com_combo->insertItem (0, "/dev/ttyS0");
   com_combo->insertItem (1, "/dev/ttyS1");
   com_combo->insertItem (2, "/dev/ttyS2");
   if (set.contains ("user_com"))
@@ -55,8 +55,9 @@ Settings::Settings (QWidget * parent):QGroupBox (tr ("Settings"), parent)
       // /dev/flasher can be symbolic link to device,
       // if it's connected to some strange port
       com_combo->insertItem (3, "/dev/flasher");
-    }
-  com_combo->insertItem (4, "USB");
+    }*/
+  com_combo->insertItem (0, "USB");
+	com_combo->setCurrentIndex(0);
 #endif
 
 #ifdef Q_WS_WIN
@@ -114,11 +115,11 @@ Settings::Settings (QWidget * parent):QGroupBox (tr ("Settings"), parent)
   ram_combo->insertItem (3, "128 KB");
   ram_combo->setCurrentIndex (1);
   
-  lang_label = new QLabel (tr ("LANGUAGE:"), this);
+  /*lang_label = new QLabel (tr ("LANGUAGE:"), this);
   labels->addWidget (lang_label);
   lang_combo = new QComboBox (this);
   combo_boxes->addWidget (lang_combo);
-  get_langs();
+  get_langs();*/
 
 
   auto_check = new QCheckBox (tr ("Check file size"), this);
@@ -137,7 +138,7 @@ Settings::Settings (QWidget * parent):QGroupBox (tr ("Settings"), parent)
   ram_size = 8;
   flash_size = 512;
   com_name = com_combo->currentText ();
-  Gui::port_type = SERIAL;
+  Gui::port_type = USB;
 
 
   connect (com_combo, SIGNAL (activated (int)), this, SLOT (setCom (int)));
@@ -145,8 +146,8 @@ Settings::Settings (QWidget * parent):QGroupBox (tr ("Settings"), parent)
   connect (flash_combo, SIGNAL (activated (int)), this,
 	   SLOT (setFlash (int)));
   connect (ram_combo, SIGNAL (activated (int)), this, SLOT (setRam (int)));
-  connect (lang_combo, SIGNAL (activated (const QString &)), this,
-	   SLOT (setLang (const QString &)));
+  //connect (lang_combo, SIGNAL (activated (const QString &)), this,
+	   //SLOT (setLang (const QString &)));
   connect (auto_check, SIGNAL (stateChanged (int)), this,
 	   SLOT (setAuto (int)));
 
@@ -158,9 +159,9 @@ Settings::setCom (int index)
 {
   com_name = getCom (index);
   com_combo->setCurrentIndex (index);
-  if (index < PORTS_COUNT)
-    Gui::port_type = SERIAL;
-  else
+  //if (index < PORTS_COUNT)
+    //Gui::port_type = SERIAL;
+  //else
     Gui::port_type = USB;
 
 }

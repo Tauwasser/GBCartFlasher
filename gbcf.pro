@@ -23,7 +23,7 @@ HEADERS += src/About.h \
            src/WriteRamThread.h \
            src/about.xpm \
            src/flasher.xpm \
-           src/icon.xpm
+           src/gbcf.xpm
 SOURCES += src/About.cpp \
            src/EraseThread.cpp \
            src/gbcflsh.cpp \
@@ -47,11 +47,9 @@ HEADERS += src/SerialPortWin.h \
 LIBS += -lftd2xx
 }
 unix {
-SOURCES += src/SerialPort.cpp \
-           src/USBPort.cpp 
-HEADERS += src/SerialPort.h \
-           src/USBPort.h
-LIBS += -lftdi
+SOURCES += src/USBPortWin.cpp 
+HEADERS += src/USBPortWin.h
+LIBS += -lftd2xx
 langpack.extra = lrelease gbcf.pro
 langpack.path = /usr/share/gbcf
 langpack.files = src/*.qm
@@ -60,4 +58,5 @@ exec.files = gbcflsh
 config.path = ~/.config/GBCFProject
 config.files = GameBoyCartFlasher.conf
 INSTALLS += langpack exec config
+ICON = gbcf.icns
 }

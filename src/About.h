@@ -16,7 +16,7 @@ class About:public QDialog
   QLabel *image;
   QVBoxLayout *all;
   QGroupBox *box;
-  QLabel *name, *copy, *desc1, *desc2, *email, *warning, *translator;
+  QLabel *bazz, *name, *copy, *desc1, *desc2, *email, *warning, *translator;
   QVBoxLayout *labels;
 public:
     About (QWidget * parent = 0);

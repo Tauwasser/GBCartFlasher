@@ -19,11 +19,13 @@ public:
     this->setMinimumWidth (400);
     this->setReadOnly (TRUE);
     QPalette palette;
-      palette.setColor (QPalette::Base, QColor (0, 255, 0));
+      palette.setColor (QPalette::Base, QColor (184, 230, 249));
       this->setPalette (palette);
     QFont font ("Courier");
-      font.setPointSize (8);
+      font.setPointSize (14);
       this->setFont (font);
+		this->setTextColor (QColor(0, 0, 0));
+		//this->setFontWeight(QFont::DemiBold);
   }
 
   void print (QString string)
@@ -33,7 +35,7 @@ public:
 
   void line ()
   {
-#ifdef Q_WS_X11
+#ifdef Q_WS_MAC
     print ("<br>");
 #else
     print ("<hr><br>");

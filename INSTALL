@@ -1,12 +1,13 @@
-Linux build & install
+Mac build & install
 =====================
 
-Before installation you have to assure that you have installed g++ (almost in
-every Linux system it is installed 'from box') and QT4. In addition, if you want
-to use USB version of device, you need to install libftdi, available at:
-http://www.intra2net.com/de/produkte/opensource/ftdi/
+Before installation you have to assure that you have installed g++ and QT4. libftdi and libusb is UNNECESSARY. in fact, libftdi may conflict with FTD2XX.. you need to install FTD2XX, available at:
+http://www.ftdichip.com/Drivers/D2XX.htm
+It is easy to install, just follow the instructions...
 
-Process of building and installing under Linux is based on QT qmake program.
+This version was compiled for the first time with ftd2xx 1.0.4 for x64 (Snow Leopard). If you are using a different setup, please email me your results @ mbazzinotti@gmail.com
+
+Process of building and installing under Mac is based on QT qmake program.
 All the build configuration is saved in gbcf.pro file. This file is used by
 qmake, to generate Makefile, which is later used by make tool to control build
 and install.
@@ -23,30 +24,5 @@ Simplest way to compile this package is:
 	`su -c "make install".
 
 After that we have running copy of GameBoy Cart Flasher!
-
-Windows build & install
-=======================
-
-Basic build process is similar to Linux, but it needs some extra effort to make
-build environment.
-First of all you have to install MinGW compiler. It's really simple, because it
-has normal win installer. Then you need QT opensource. I recommend binary 
-package with windows installer - it's fast and easy to install. Last thing to
-remember is installing FTD2XX library, available with windows USB drivers at:
-http://www.ftdichip.com/Drivers/CDM/CDM%202.02.04%20WHQL%20Certified.zip
-In order to make it work you have to copy:
-- ft2dxx.h to include directory in MinGW
-- ft2dxx.lib to lib directory in MinGW
-- ft2dxx.dll to directory containing gbcf.exe file (after build)
-
-Next we can go to build process, which consist of:
-
- 1. Running Qt Command Prompt from start menu
- 2. Getting into project directory
- 3. Calling `qmake` and `make` commands - after that we have .exe file
- 4. Making .qm binary translation files from .ts text files, with
- 	`lrelease gbcf.pro` command. *.qm files will appear in src directory.
- 5. Copying gbcflsh.exe, ft2dxx.dll, *.qm into destination directory, and
- 	adding gbcf.reg into registry.
 
 That's about it.

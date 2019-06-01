@@ -14,14 +14,14 @@ enum cchars
 #define PACKETSIZE 72
 #define FRAMESIZE 64
 #define AUTOSIZE -1
-#define PORTS_COUNT 4
-#define VER "1.1"
+#define PORTS_COUNT 1
+#define VER "1.3"
 
 #define USB 0
 #define SERIAL 1
 
 /* strings for version information */
-#ifdef Q_WS_X11
+#ifdef Q_WS_MAC
 #define SYSTEM "LINUX"
 #define DEVELOPED "GCC 4.1.1 + QT 4.3.2"
 #endif

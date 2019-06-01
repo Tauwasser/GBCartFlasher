@@ -67,5 +67,6 @@ public:
   void erase_ram (void);
   void about ();
   void setProgress (int ile, int max);
+	//void almostQuitting();
   AbstractPort *create_port ();
 };

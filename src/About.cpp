@@ -24,23 +24,28 @@ About::About (QWidget * parent):QDialog (parent)
   box->setFixedWidth (501);
   labels = new QVBoxLayout (box);
   name =
-    new QLabel (tr ("GB Cart Flasher for Win9x, Win2k, WinXP version ") +
-		VER + " (32-bit)", box);
-  labels->addWidget (name);
-  copy = new QLabel ("Copyright (c) 2005-2007 Kraku & Chroost", box);
+    new QLabel (tr ("GB Cart Flasher ") +
+								VER + " for OSX\nTested on Snow Leopard (64=bit)", box);
+	labels->addWidget (name);
+	bazz = new QLabel ("Updated by <a href=http://www.youtube.com/imyourbazz>Bazz</a> - FTD2XX Drivers", box);
+  bazz->setOpenExternalLinks(TRUE);
+	labels->addWidget(bazz);
+	
+  copy = new QLabel ("\n\nCopyright (c) 2005-2007 Kraku & Chroost", box);
   labels->addWidget (copy);
   email =
     new
     QLabel (tr
 	    ("e-mail: <a href=mailto:gbflasher@interia.pl>gbflasher@interia.pl</a>"),
 	    box);
+	email->setOpenExternalLinks(TRUE);
   labels->addWidget (email);
   translator = new QLabel(tr("Translation by: Chroost"),box);
   labels->addWidget(translator);
   desc1 = new QLabel (tr ("This program and device, called set, enables to:\n"
 			  "- make game backups from owned cartridges and play them on PC,\n"
 			  "- transfer game saves between cartridge and PC, save and modify them,\n"
-			  "- test written by yourself games directly on console (rewritable cartridge required)."),
+			  "- test written by yourself games directly on console\n  (rewritable cartridge required)."),
 		      box);
   labels->addWidget (desc1);
   warning = new QLabel (tr ("<b>WARNING!</b>"), box);
@@ -48,7 +53,7 @@ About::About (QWidget * parent):QDialog (parent)
   desc2 =
     new
     QLabel (tr("Using this set for purposes other than previously listed,\n"
-	    "especially for making illegal copies of copyrighted games is strictly prohibited!"), box);
+	    "especially for making illegal copies of copyrighted games is\nstrictly prohibited!"), box);
   labels->addWidget (desc2);
   all->addWidget (box);
   ok_btn = new QPushButton (tr ("Close"), this);

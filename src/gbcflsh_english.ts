@@ -345,8 +345,8 @@ especially for making illegal copies of copyrighted games is strictly prohibited
     </message>
     <message>
         <location filename="Gui.cpp" line="620"/>
-        <source>&gt;Error opening COM port.</source>
-        <translation>&gt;Error opening COM port.</translation>
+        <source>&gt;Error opening USB port.</source>
+        <translation>&gt;Error opening USB port.</translation>
     </message>
     <message>
         <location filename="Gui.cpp" line="624"/>

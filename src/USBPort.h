@@ -5,15 +5,26 @@
 #ifndef _USBPORT_H_
 #define _USBPORT_H_
 #include "AbstractPort.h"
-#include <ftdi.h>
+//#include <ftdi.h>
+#include <ftd2xx.h>
 #include <time.h>
 
 
 class USBPort:public AbstractPort
 {
 Q_OBJECT
-  struct ftdi_context ftdic;
+  //struct ftdi_context ftdic;
   FILE *file;
+	
+	// new version
+	//////////////////////
+	FT_HANDLE ftHandle; // = NULL;
+	//char * 	pcBufLD;
+	//char cBufLD[64];	// device serial name
+	FT_STATUS	ftStatus;	// get name
+	//DWORD	dwRxSize = 0;
+	//DWORD 	dwBytesWritten, dwBytesRead;
+	//int	iNumDevs;
 
   bool opened;
 public:

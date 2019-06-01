@@ -106,17 +106,17 @@ main (int argc, char *argv[])
  * selected_lang record as langname.
  */
   QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8"));
-  QString langName = settings.value("selected_lang").toString ();
-  QString langPath = settings.value("lang_path").toString();
+  //QString langName = settings.value("selected_lang").toString ();
+  /*QString langPath = settings.value("lang_path").toString();
   if(langPath == "")
   	langPath = "./";
   QTranslator translator;
   translator.load ( "gbcflsh_" + langName,langPath);
-  app.installTranslator (&translator);
+  app.installTranslator (&translator);*/
 
   Gui window;
   window.show ();
-#ifdef Q_WS_WIN
+#ifdef Q_WS_MAC
   window.startup_info();
 #endif
   return app.exec ();
