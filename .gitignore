@@ -1,0 +1,9 @@
+.settings/
+build/
+debug/
+release/
+Makefile
+Makefile.*
+*.Debug
+*.Release
+ui_*.h
