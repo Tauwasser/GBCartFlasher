@@ -162,12 +162,12 @@ static enum flash_algorithm cur_flash_algorithm;
  */
 static uint8_t cur_wait_mode;
 /**
- * High byte of number of banks
+ * Low byte of number of banks
  * for current operation.
  */
 static uint8_t cur_numbanks_lo;
 /**
- * Low byte of number of banks
+ * High byte of number of banks
  * for current operation.
  */
 static uint8_t cur_numbanks_hi;
