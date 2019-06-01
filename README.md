@@ -2,12 +2,12 @@
 
 This is a firmware for the Game Boy Cart Flasher, which was originally developed during 2005–2007 by
 Polish Game Boy enthusiasts Kraku & Chroost.
-This firmware is a reimplementation of the USB firmware in the programming language C.
+This firmware is a reimplementation of the USB firmware in the C programming language.
 
 For information on the hardware and original firmware images, check out the hardware branch
 *hardware*.
 
-For information on the software, check out the software branch *reader_sw*. 
+For information on the host software, check out the software branch *reader_sw*. 
 
 ## Features
 
@@ -22,7 +22,7 @@ This reimplemented firmware only supports the USB version of GB Cart Flasher.
 
 ## Compilation
 
-Use Atmel Studio v6.1 or later to compile this firmware. You should have at least one .hex file after 
+Use Atmel Studio v7.0 or later to compile this firmware. You should have at least one .hex file after 
 successful compilation.
 
 ## Licensing
@@ -31,7 +31,7 @@ The original files came without an explicit license other than the statement "[T
 and any commercial use is prohibited". I, Tauwasser, believe the BY-NC-SA 4.0 International license 
 to best match the spirit and intent of the original authors, Kraku & Chroost.
 
-This firmware is licensed under the Attribution-NonCommercial-ShareAlike 4.0 International.
+This C firmware reimplementation is licensed under the Attribution-NonCommercial-ShareAlike 4.0 International.
 
 ```
 Copyright (C) 2005–2007 Kraku & Chroost (gbflasher@interia.pl)
