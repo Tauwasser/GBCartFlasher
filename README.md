@@ -1,7 +1,7 @@
 # Interface for Nintendo® Game Boy® Cartridges
 
 This is the host software for the Game Boy Cart Flasher, which was originally developed during 2005–2007 by
-Polish Game Boy enthusiasts Kraku & Chroost.
+Polish Game Boy enthusiasts Kraku & Chroost and ported to MacOS by Michael J. "Bazz" Bazzinotti.
 
 For a reimplementation of the microcontroller firmware for the USB model in the C programming language,
 check out the master branch *master*.
@@ -39,7 +39,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 ## Legalese
 
-I'm not affiliated with Nintendo in any way. Neither are Kraku or Chroost.
+I'm not affiliated with Nintendo in any way. Neither are Kraku or Chroost or Bazz.
 
 Game Boy® is a registered trademark by Nintendo. Nintendo® is a registered trademark.
 All other trademarks are property of their respective owner.
