@@ -31,6 +31,11 @@ produce a printed circuit board.
 Flashing the firmware requires an external flasher and adapter as the boards are not equipped for
 in-system programmability.
 
+## Disassembly
+
+The excellent avrdisas 0.06-win32 <https://www.johannes-bauer.com/mcus/avrdisas/> was used to aid in the disassembly.
+The tag file can be found inside the firmware folder.
+
 ## Licensing
 
 The original files came without an explicit license other than the statement "[T]his project is free 
