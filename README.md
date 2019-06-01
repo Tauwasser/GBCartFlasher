@@ -2,12 +2,12 @@
 
 This is a firmware for the Game Boy Cart Flasher, which was originally developed during 2005–2007 by
 Polish Game Boy enthusiasts Kraku & Chroost.
-This firmware is a reimplementation of the USB firmware in the programming language C.
+This firmware is a reimplementation of the USB firmware in the C programming language.
 
 For information on the hardware and original firmware images, check out the hardware branch
 *hardware*.
 
-For information on the software, check out the software branch *reader_sw*. 
+For information on the host software, check out the software branch *reader_sw*. 
 
 ## Features
 
