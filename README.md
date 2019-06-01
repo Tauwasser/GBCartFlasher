@@ -22,7 +22,7 @@ This reimplemented firmware only supports the USB version of GB Cart Flasher.
 
 ## Compilation
 
-Use Atmel Studio v6.1 or later to compile this firmware. You should have at least one .hex file after 
+Use Atmel Studio v7.0 or later to compile this firmware. You should have at least one .hex file after 
 successful compilation.
 
 ## Licensing
